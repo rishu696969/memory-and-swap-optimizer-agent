@@ -1,0 +1,7 @@
+# direct sudo attempts outside the narrow rule (expected to fail)
+sudo: a password is required
+exit=1
+sudo: a password is required
+exit=1
+sudo: a password is required
+exit=1

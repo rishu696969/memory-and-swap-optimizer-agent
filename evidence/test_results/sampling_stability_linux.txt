@@ -1,0 +1,11 @@
+# 10 repeated runs of test_sampling_detects_real_growing_process on Linux 7.0.12-linuxkit aarch64 (Ubuntu 24.04 container)
+1 passed, 23 deselected in 2.75s
+1 passed, 23 deselected in 2.64s
+1 passed, 23 deselected in 2.69s
+1 passed, 23 deselected in 2.64s
+1 passed, 23 deselected in 2.64s
+1 passed, 23 deselected in 2.65s
+1 passed, 23 deselected in 2.67s
+1 passed, 23 deselected in 2.64s
+1 passed, 23 deselected in 2.68s
+1 passed, 23 deselected in 2.63s

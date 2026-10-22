@@ -1,0 +1,2 @@
+original vm.swappiness=60
+final vm.swappiness=60 (restored: yes)

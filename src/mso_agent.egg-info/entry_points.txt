@@ -1,0 +1,3 @@
+[console_scripts]
+mso-agent = mso_agent.interface.repl:main
+mso-server = mso_agent.server:main

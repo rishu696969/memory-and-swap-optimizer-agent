@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: mso-agent
+Version: 1.0.0
+Summary: Memory and Swap Optimizer Agent: an MCP-based, human-approved Linux OS agent (BCSE303P OS Lab project)
+Author: Kumar Hrishikesh Ranjan (24BDS0221), Ashish Kumar (24BKT059)
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: mcp<3,>=2.3
+Requires-Dist: psutil>=5.9
+Requires-Dist: pydantic>=2.7
+Requires-Dist: httpx>=0.27
+Provides-Extra: openai
+Requires-Dist: openai>=1.40; extra == "openai"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: openai>=1.40; extra == "dev"

@@ -1,0 +1,112 @@
+.dockerignore
+.env.example
+README.md
+Review 3 Template.docx
+Review_1_Memory_Swap_Optimizer_Agent (1).pdf
+Review_2_with_cover.pdf
+docker/
+    Dockerfile
+    sudoers-mso-example
+docs/
+    diagrams/
+        architecture.dot
+        architecture.png
+        architecture.svg
+        security_flow.dot
+        security_flow.png
+        security_flow.svg
+        sequence_diagram.py
+        tool_call_sequence.png
+        tool_call_sequence.svg
+    project_tree.txt
+    tool_schemas.json
+evidence/
+    live_privileged/
+        07_live_privileged.txt
+        07b_sudo_scope_check.txt
+        live_summary.txt
+    metrics/
+        metrics_demo.json
+    test_results/
+        junit_linux.xml
+        linux_environment.txt
+        pytest_linux.txt
+        pytest_macos_host.txt
+    transcripts/
+        01_memory_diagnosis.txt
+        02_leak_detection.txt
+        03_swappiness_approval.txt
+        04_file_integrity.txt
+        04b_file_integrity_after_changes.txt
+        05_modules_services.txt
+        06_security_attempts.txt
+        audit_log_sample.jsonl
+pyproject.toml
+reference/
+    Review 3 Template.docx
+    Review_1_Memory_Swap_Optimizer_Agent (1).pdf
+    Review_2_with_cover.pdf
+report/
+    Memory_and_Swap_Optimizer_Agent_Report.docx
+    Memory_and_Swap_Optimizer_Agent_Report.pdf
+    build_report.py
+    docx_helpers.py
+    report_content.py
+sample_data/
+    project/
+        README.txt
+        backup.sh
+        config/
+            app.conf
+scripts/
+    collect_evidence.sh
+    dump_tool_schemas.py
+    leaky_demo.py
+    linux_live_check.sh
+    make_tree.sh
+    measure_metrics.py
+    run_demos.sh
+src/
+    mso_agent/
+        __init__.py
+        __main__.py
+        audit.py
+        config.py
+        execution/
+            __init__.py
+            runner.py
+        interface/
+            __init__.py
+            repl.py
+        orchestration/
+            __init__.py
+            agent.py
+            demo_router.py
+            mcp_client.py
+            prompts.py
+            providers.py
+        security/
+            __init__.py
+            approval.py
+            blacklist.py
+            policy.py
+            validation.py
+        server.py
+        tools/
+            __init__.py
+            integrity.py
+            kernel_modules.py
+            memory.py
+            recommend.py
+            services.py
+            swap.py
+tests/
+    conftest.py
+    test_agent_providers.py
+    test_approval.py
+    test_integrity.py
+    test_mcp_integration.py
+    test_memory.py
+    test_privileged_mocked.py
+    test_runner.py
+    test_validation.py

@@ -1,0 +1,45 @@
+// System architecture of the Memory and Swap Optimizer Agent (as built).
+// Render: dot -Tpng -Gdpi=200 architecture.dot -o architecture.png
+digraph architecture {
+  graph [rankdir=TB, fontname="DejaVu Sans", fontsize=13, nodesep=0.3, ranksep=0.32, newrank=true, pad=0.1];
+  node  [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=13, penwidth=1.2, margin="0.12,0.05"];
+  edge  [fontname="DejaVu Sans", fontsize=12, color="#444444", penwidth=1.2];
+
+  user [label="User\nrequests + y/n approvals", fillcolor="#EEEEEE"];
+
+  subgraph cluster_host {
+    label="Host process: mso-agent (normal user)"; style="rounded,dashed"; color="#5B7DB1"; fontcolor="#1F3864";
+    repl  [label="Interface: repl.py\nREPL, approval prompt", fillcolor="#DAE3F3"];
+    agent [label="Orchestration: agent.py\nagent loop, approval\nround-trip, HMAC token", fillcolor="#DAE3F3"];
+    prov  [label="Providers\nOllama | OpenAI |\ndemo router (no LLM)", fillcolor="#DAE3F3"];
+    client[label="MCP client\nofficial SDK Client\n(stdio)", fillcolor="#DAE3F3"];
+  }
+  llm [label="Model runtime\nOllama / OpenAI", shape=box3d, fillcolor="#F2F2F2"];
+
+  subgraph cluster_server {
+    label="Child process: mso_agent.server (normal user)"; style="rounded,dashed"; color="#548235"; fontcolor="#375623";
+    server [label="MCP server: SecureMCPServer\n17 typed tools, pydantic results", fillcolor="#E2EFDA"];
+    sec    [label="Security: strict validation,\nallowlists, HMAC approval gate,\nregex screen (supplementary)", fillcolor="#FCE4D6"];
+    tools  [label="Tools: memory, swap,\nrecommend [PRIMARY];\nintegrity, modules, services", fillcolor="#E2EFDA"];
+    runner [label="Runner: fixed executables,\nshell=False, sudo -n,\ntimeout, output limit", fillcolor="#FFF2CC"];
+  }
+  audit [label="Audit log\nJSON lines,\nsecrets redacted", shape=cylinder, fillcolor="#EDEDED"];
+  linux [label="Linux: /proc/meminfo, pressure,\nvmstat, swaps, sys/vm, modules;\nsysctl, modprobe, systemctl, files", fillcolor="#FBE5D6"];
+
+  user  -> repl;
+  repl  -> agent;
+  agent -> prov  [label=" prompt +\n schemas"];
+  prov  -> llm   [label=" HTTP", style=dashed];
+  agent -> client[label=" tool\n calls"];
+  client-> server[label=" MCP JSON-RPC\n over stdio", color="#1F3864", penwidth=2.2];
+  server-> sec;
+  sec   -> tools [label=" validated"];
+  tools -> runner;
+  tools -> linux [label=" reads", style=dashed];
+  runner-> linux [label=" argv"];
+  server-> audit [style=dotted, arrowhead=none];
+  agent -> audit [style=dotted, arrowhead=none, constraint=false];
+
+  { rank=same; prov; client; }
+  { rank=same; sec; audit; }
+}

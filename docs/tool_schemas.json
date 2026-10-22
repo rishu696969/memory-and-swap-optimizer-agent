@@ -1,0 +1,356 @@
+[
+  {
+    "name": "get_memory_stats",
+    "read_only": true,
+    "description": "Report total, available, free and used RAM, buffers, page cache, shared memory, swap usage and a\n        memory-pressure level (from MemAvailable and PSI). Use this first for any 'slow/lagging/RAM' question.",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "get_memory_statsArguments"
+    }
+  },
+  {
+    "name": "get_top_memory_processes",
+    "read_only": true,
+    "description": "List the processes using the most resident memory (RSS).",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "default": 10,
+          "description": "how many processes",
+          "maximum": 25,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        }
+      },
+      "title": "get_top_memory_processesArguments"
+    }
+  },
+  {
+    "name": "sample_process_memory",
+    "read_only": true,
+    "description": "Sample process RSS repeatedly and flag SUSTAINED growth (a suspected leak, never proof of one).\n        Use for 'check for memory leaks'.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "process to sample; omit to sample the top_n largest",
+          "title": "Pid"
+        },
+        "top_n": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Top N",
+          "type": "integer"
+        },
+        "samples": {
+          "default": 6,
+          "maximum": 30,
+          "minimum": 3,
+          "title": "Samples",
+          "type": "integer"
+        },
+        "interval_seconds": {
+          "default": 1.0,
+          "maximum": 10.0,
+          "minimum": 0.2,
+          "title": "Interval Seconds",
+          "type": "number"
+        },
+        "growth_threshold_mb": {
+          "default": 10.0,
+          "maximum": 4096,
+          "minimum": 1,
+          "title": "Growth Threshold Mb",
+          "type": "number"
+        }
+      },
+      "title": "sample_process_memoryArguments"
+    }
+  },
+  {
+    "name": "get_swap_info",
+    "read_only": true,
+    "description": "Show swap devices and usage, vm.swappiness, vfs_cache_pressure and cumulative swap-in/out counters.",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "get_swap_infoArguments"
+    }
+  },
+  {
+    "name": "recommend_memory_actions",
+    "read_only": true,
+    "description": "Measure memory, swap activity over a short window and top processes, then return evidence-based\n        recommendations. Advisory only; changes nothing.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "window_seconds": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Window Seconds",
+          "type": "integer"
+        }
+      },
+      "title": "recommend_memory_actionsArguments"
+    }
+  },
+  {
+    "name": "request_swappiness_change",
+    "read_only": false,
+    "description": "Ask the human to approve a TEMPORARY vm.swappiness change (10-100). Does not execute anything.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "maximum": 100,
+          "minimum": 10,
+          "title": "Value",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "request_swappiness_changeArguments"
+    }
+  },
+  {
+    "name": "request_drop_caches",
+    "read_only": false,
+    "description": "Ask the human to approve dropping clean caches (1=page cache, 2=dentries/inodes, 3=both).\n        Rarely useful; prefer explaining that cache is reclaimable. Does not execute anything.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "title": "Level",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "level"
+      ],
+      "title": "request_drop_cachesArguments"
+    }
+  },
+  {
+    "name": "verify_file_baseline",
+    "read_only": true,
+    "description": "Re-hash a directory with SHA-256 and report modified, missing and new files against its baseline.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "title": "Directory",
+          "type": "string"
+        }
+      },
+      "required": [
+        "directory"
+      ],
+      "title": "verify_file_baselineArguments"
+    }
+  },
+  {
+    "name": "list_file_baselines",
+    "read_only": true,
+    "description": "List directories that have a stored SHA-256 baseline.",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "list_file_baselinesArguments"
+    }
+  },
+  {
+    "name": "request_baseline_creation",
+    "read_only": false,
+    "description": "Ask the human to approve creating (or replacing) the SHA-256 baseline of a directory inside the\n        allowed roots. Does not execute anything.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "title": "Directory",
+          "type": "string"
+        }
+      },
+      "required": [
+        "directory"
+      ],
+      "title": "request_baseline_creationArguments"
+    }
+  },
+  {
+    "name": "list_kernel_modules",
+    "read_only": true,
+    "description": "List loaded kernel modules from /proc/modules, optionally filtered by a name substring.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name_filter": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Filter"
+        }
+      },
+      "title": "list_kernel_modulesArguments"
+    }
+  },
+  {
+    "name": "get_kernel_module_info",
+    "read_only": true,
+    "description": "Show modinfo fields (description, filename, depends...) for one module name.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "module": {
+          "title": "Module",
+          "type": "string"
+        }
+      },
+      "required": [
+        "module"
+      ],
+      "title": "get_kernel_module_infoArguments"
+    }
+  },
+  {
+    "name": "request_module_action",
+    "read_only": false,
+    "description": "Ask the human to approve loading/unloading/reloading an ALLOWLISTED kernel module.\n        Does not execute anything.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "module": {
+          "title": "Module",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "load",
+            "unload",
+            "reload"
+          ],
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "module",
+        "action"
+      ],
+      "title": "request_module_actionArguments"
+    }
+  },
+  {
+    "name": "get_service_status",
+    "read_only": true,
+    "description": "Show load/active/sub state and unit-file state of a systemd service.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "title": "get_service_statusArguments"
+    }
+  },
+  {
+    "name": "request_service_action",
+    "read_only": false,
+    "description": "Ask the human to approve restarting or enabling an ALLOWLISTED systemd service.\n        Does not execute anything.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "title": "Service",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "restart",
+            "enable"
+          ],
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "service",
+        "action"
+      ],
+      "title": "request_service_actionArguments"
+    }
+  },
+  {
+    "name": "apply_approved_change",
+    "read_only": false,
+    "description": "HOST ONLY. Execute a pending operation after verifying the human approval token.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "op_id": {
+          "title": "Op Id",
+          "type": "string"
+        },
+        "approval_token": {
+          "title": "Approval Token",
+          "type": "string"
+        }
+      },
+      "required": [
+        "op_id",
+        "approval_token"
+      ],
+      "title": "apply_approved_changeArguments"
+    }
+  },
+  {
+    "name": "cancel_pending_change",
+    "read_only": false,
+    "description": "HOST ONLY. Discard a pending operation the human declined.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "op_id": {
+          "title": "Op Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "op_id"
+      ],
+      "title": "cancel_pending_changeArguments"
+    }
+  }
+]

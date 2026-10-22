@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mso-agent"
+version = "1.0.0"
+description = "Memory and Swap Optimizer Agent: an MCP-based, human-approved Linux OS agent (BCSE303P OS Lab project)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Kumar Hrishikesh Ranjan (24BDS0221)" },
+    { name = "Ashish Kumar (24BKT059)" },
+]
+dependencies = [
+    "mcp>=2.3,<3",
+    "psutil>=5.9",
+    "pydantic>=2.7",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.40"]
+dev = ["pytest>=8", "openai>=1.40"]
+
+[project.scripts]
+mso-agent = "mso_agent.interface.repl:main"
+mso-server = "mso_agent.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "linux: needs Linux /proc interfaces (skipped elsewhere)",
+    "live: talks to a real external service such as Ollama (opt-in)",
+]

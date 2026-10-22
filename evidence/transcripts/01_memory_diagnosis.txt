@@ -1,0 +1,45 @@
+# transcript: 01_memory_diagnosis
+# captured: 2026-10-22T17:40:11Z on Linux 7.0.12-linuxkit aarch64, user student
+
+Memory and Swap Optimizer Agent v1.0.0
+DEMO ROUTING (deterministic keyword rules - no LLM inference) | MCP tools: 17 | dry-run: False
+audit log: /home/student/.local/share/mso-agent/audit.jsonl
+Type /help for examples, /quit to exit.
+
+mso> My computer is lagging. Free up some RAM cache and check for memory leaks.
+  -> tool get_memory_stats({}) : ok
+  -> tool recommend_memory_actions({"window_seconds": 2}) : ok
+  -> tool sample_process_memory({"samples": 6, "interval_seconds": 1.0, "growth_threshold_mb": 5.0}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+RAM: 3916.4 MB total, 3050.7 MB available (77.9%), 493.9 MB completely free, 2507.2 MB page cache.
+Swap: 0.0 of 1024.0 MB used.
+Memory pressure: LOW - available memory is at least 20% and no stall/swap-activity signal was measured
+'Free' (493.9 MB) counts only unused pages. 'Available' (3050.7 MB) also includes page cache and reclaimable slab that the kernel can drop on demand, so it is the better measure of headroom. 2507.2 MB of page cache is not 'wasted' memory.
+Recommendations (pressure low):
+  [info] No memory pressure measured: No action is needed. Lag, if any, is more likely CPU, disk I/O or a single slow application.
+  [info] Large page cache is normal: The cache is reclaimable and speeds up file access. Dropping caches is not recommended; it would only make 'free' look larger temporarily.
+Advisory only: no system state was changed. Any change must be requested explicitly and approved by a human; its effect should be judged by measuring again, not assumed.
+Sampled 2 process(es) 6 times every 1.0 s:
+  pid 10 python3: SUSPECTED sustained growth: RSS rose 19.0 MB over 5.0 s and increased in 5/5 intervals. This is a signal to investigate, not proof of a leak (caches, buffers and warm-up can grow legitimately).
+  pid 1 bash: No sustained growth above 5.0 MB in this window (net +0.0 MB, 0/5 intervals increased).
+Growth in RSS over a short window only flags a SUSPECTED leak. Confirming a leak needs longer observation and application-level tools (e.g. valgrind, heaptrack, tracemalloc).
+
+mso> show the top 5 processes by memory
+  -> tool get_top_memory_processes({"limit": 5}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Top 4 processes by resident memory:
+  pid      15       68.5 MB   1.75%  mso-agent
+  pid      16       66.1 MB   1.69%  python3
+  pid      10       49.5 MB   1.27%  python3
+  pid       1        3.0 MB   0.08%  bash
+
+mso> show swap info and swappiness
+  -> tool get_swap_info({}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Swap devices: /var/lib/swap (0.0/1024.0 MB). vm.swappiness = 60.
+vm.swappiness (0-200 on Linux >= 5.8, default 60) is the relative cost the kernel assigns to swapping anonymous pages versus dropping file-backed page cache when it must reclaim memory. Lower values prefer dropping cache; higher values swap anonymous pages more readily. It does not make the kernel swap when there is no memory pressure. Swap *used* alone is not a problem; sustained swap-in/out traffic is.
+
+mso> /quit

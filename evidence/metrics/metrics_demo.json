@@ -1,0 +1,552 @@
+{
+  "environment": {
+    "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "user": null
+  },
+  "accuracy": {
+    "provider": "demo",
+    "is_llm": false,
+    "model": null,
+    "correct": 18,
+    "total": 20,
+    "accuracy": 0.9,
+    "rows": [
+      {
+        "prompt": "My computer is lagging. Free up some RAM cache and check for memory leaks.",
+        "expected": [
+          "get_memory_stats",
+          "recommend_memory_actions",
+          "sample_process_memory"
+        ],
+        "got": [
+          "get_memory_stats",
+          "recommend_memory_actions",
+          "sample_process_memory"
+        ],
+        "arguments": [
+          {},
+          {
+            "window_seconds": 2
+          },
+          {
+            "samples": 6,
+            "interval_seconds": 1.0,
+            "growth_threshold_mb": 5.0
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "How much RAM is available right now?",
+        "expected": [
+          "get_memory_stats"
+        ],
+        "got": [
+          "get_memory_stats"
+        ],
+        "arguments": [
+          {}
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "show the top 5 processes by memory",
+        "expected": [
+          "get_top_memory_processes"
+        ],
+        "got": [
+          "get_top_memory_processes"
+        ],
+        "arguments": [
+          {
+            "limit": 5
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Which programs are eating the most memory?",
+        "expected": [
+          "get_top_memory_processes"
+        ],
+        "got": [
+          "get_memory_stats"
+        ],
+        "arguments": [
+          {}
+        ],
+        "correct": false,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "check pid 1 for memory leaks",
+        "expected": [
+          "sample_process_memory"
+        ],
+        "got": [
+          "get_memory_stats",
+          "sample_process_memory"
+        ],
+        "arguments": [
+          {},
+          {
+            "samples": 6,
+            "interval_seconds": 1.0,
+            "growth_threshold_mb": 5.0,
+            "pid": 1
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Is any process steadily growing in memory?",
+        "expected": [
+          "sample_process_memory"
+        ],
+        "got": [
+          "get_top_memory_processes",
+          "sample_process_memory"
+        ],
+        "arguments": [
+          {
+            "limit": 5
+          },
+          {
+            "samples": 6,
+            "interval_seconds": 1.0,
+            "growth_threshold_mb": 5.0
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "show swap info and swappiness",
+        "expected": [
+          "get_swap_info"
+        ],
+        "got": [
+          "get_swap_info"
+        ],
+        "arguments": [
+          {}
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Is my machine swapping a lot?",
+        "expected": [
+          "get_memory_stats",
+          "get_swap_info",
+          "recommend_memory_actions"
+        ],
+        "got": [
+          "get_swap_info"
+        ],
+        "arguments": [
+          {}
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "set swappiness to 30",
+        "expected": [
+          "request_swappiness_change"
+        ],
+        "got": [
+          "request_swappiness_change"
+        ],
+        "arguments": [
+          {
+            "value": 30
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Please lower vm.swappiness to 20 for now",
+        "expected": [
+          "request_swappiness_change"
+        ],
+        "got": [
+          "request_swappiness_change"
+        ],
+        "arguments": [
+          {
+            "value": 20
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Give me recommendations to optimise memory",
+        "expected": [
+          "get_memory_stats",
+          "recommend_memory_actions"
+        ],
+        "got": [
+          "get_memory_stats",
+          "recommend_memory_actions"
+        ],
+        "arguments": [
+          {},
+          {
+            "window_seconds": 2
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "drop caches level 1",
+        "expected": [
+          "request_drop_caches"
+        ],
+        "got": [
+          "request_drop_caches"
+        ],
+        "arguments": [
+          {
+            "level": 1
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "create a baseline for /home/student/demo_dir",
+        "expected": [
+          "request_baseline_creation"
+        ],
+        "got": [
+          "request_baseline_creation"
+        ],
+        "arguments": [
+          {
+            "directory": "/home/student/demo_dir"
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "verify /home/student/demo_dir",
+        "expected": [
+          "verify_file_baseline"
+        ],
+        "got": [
+          "verify_file_baseline"
+        ],
+        "arguments": [
+          {
+            "directory": "/home/student/demo_dir"
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Have any files in /home/student/demo_dir been modified since the baseline?",
+        "expected": [
+          "verify_file_baseline"
+        ],
+        "got": [
+          "verify_file_baseline"
+        ],
+        "arguments": [
+          {
+            "directory": "/home/student/demo_dir"
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "list kernel modules",
+        "expected": [
+          "list_kernel_modules"
+        ],
+        "got": [
+          "list_kernel_modules"
+        ],
+        "arguments": [
+          {}
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "My webcam isn't working. Try reloading the video drivers.",
+        "expected": [
+          "request_module_action"
+        ],
+        "got": [
+          "request_module_action"
+        ],
+        "arguments": [
+          {
+            "module": "uvcvideo",
+            "action": "reload"
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "status of cron.service",
+        "expected": [
+          "get_service_status"
+        ],
+        "got": [
+          "get_service_status"
+        ],
+        "arguments": [
+          {
+            "service": "cron.service"
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      },
+      {
+        "prompt": "Is the nginx web server running?",
+        "expected": [
+          "get_service_status"
+        ],
+        "got": [],
+        "arguments": [],
+        "correct": false,
+        "seconds": 0.0,
+        "error": null,
+        "text": "[demo routing: deterministic keyword rules, no LLM inference]\nI could not map that request to a tool. Try: 'my computer is lagging', 'show top 5 processes', 'check for memory leaks', 'show swap info',"
+      },
+      {
+        "prompt": "Restart the cron service and make sure it starts on boot",
+        "expected": [
+          "request_service_action"
+        ],
+        "got": [
+          "request_service_action",
+          "request_service_action"
+        ],
+        "arguments": [
+          {
+            "service": "cron",
+            "action": "restart"
+          },
+          {
+            "service": "cron",
+            "action": "enable"
+          }
+        ],
+        "correct": true,
+        "seconds": 0.0,
+        "error": null,
+        "text": null
+      }
+    ]
+  },
+  "latency": {
+    "server_startup_s": 0.555,
+    "calls": {
+      "get_memory_stats": {
+        "n": 30,
+        "median_ms": 1.45,
+        "p95_ms": 1.85,
+        "max_ms": 59.77
+      },
+      "get_swap_info": {
+        "n": 30,
+        "median_ms": 1.32,
+        "p95_ms": 1.46,
+        "max_ms": 5.95
+      },
+      "get_top_memory_processes": {
+        "n": 30,
+        "median_ms": 1.47,
+        "p95_ms": 1.67,
+        "max_ms": 5.26
+      },
+      "list_kernel_modules": {
+        "n": 30,
+        "median_ms": 1.48,
+        "p95_ms": 1.71,
+        "max_ms": 4.56
+      },
+      "request_swappiness_change": {
+        "n": 30,
+        "median_ms": 1.2,
+        "p95_ms": 1.57,
+        "max_ms": 3.74
+      }
+    },
+    "malicious_calls": {
+      "total": 14,
+      "rejected": 14,
+      "details": [
+        {
+          "tool": "apply_approved_change",
+          "arguments": {
+            "op_id": "op-000000000000",
+            "approval_token": "yes"
+          },
+          "rejected": true,
+          "error": "blocked: host-only tool: approvals can only be given by the human"
+        },
+        {
+          "tool": "request_swappiness_change",
+          "arguments": {
+            "value": 30,
+            "approved": true
+          },
+          "rejected": true,
+          "error": "rejected by validator: unknown argument(s) for request_swappiness_change: approved"
+        },
+        {
+          "tool": "request_swappiness_change",
+          "arguments": {
+            "value": "30"
+          },
+          "rejected": true,
+          "error": "rejected by validator: argument 'value' must be int, got str"
+        },
+        {
+          "tool": "request_swappiness_change",
+          "arguments": {
+            "value": 0
+          },
+          "rejected": true,
+          "error": "rejected by validator: argument 'value' must be >= 10"
+        },
+        {
+          "tool": "get_service_status",
+          "arguments": {
+            "service": "cron.service; reboot"
+          },
+          "rejected": true,
+          "error": "Error executing tool get_service_status: invalid service name 'cron.service; reboot'"
+        },
+        {
+          "tool": "request_service_action",
+          "arguments": {
+            "service": "ssh.service",
+            "action": "restart"
+          },
+          "rejected": true,
+          "error": "Error executing tool request_service_action: service 'ssh.service' is not in the approved allowlist ['apache2.service', 'cron.service', 'nginx.service', 'postgresql.service']"
+        },
+        {
+          "tool": "request_module_action",
+          "arguments": {
+            "module": "uvcvideo; rm -rf /",
+            "action": "reload"
+          },
+          "rejected": true,
+          "error": "Error executing tool request_module_action: invalid kernel module name 'uvcvideo; rm -rf /'"
+        },
+        {
+          "tool": "request_module_action",
+          "arguments": {
+            "module": "ext4",
+            "action": "unload"
+          },
+          "rejected": true,
+          "error": "Error executing tool request_module_action: module 'ext4' is not in the approved allowlist ['dummy', 'snd_dummy', 'uvcvideo']"
+        },
+        {
+          "tool": "request_baseline_creation",
+          "arguments": {
+            "directory": "/etc"
+          },
+          "rejected": true,
+          "error": "Error executing tool request_baseline_creation: directory /etc is outside the allowed roots ['/home/student']"
+        },
+        {
+          "tool": "request_baseline_creation",
+          "arguments": {
+            "directory": "/home/student/../../etc"
+          },
+          "rejected": true,
+          "error": "Error executing tool request_baseline_creation: directory /etc is outside the allowed roots ['/home/student']"
+        },
+        {
+          "tool": "verify_file_baseline",
+          "arguments": {
+            "directory": "/proc"
+          },
+          "rejected": true,
+          "error": "Error executing tool verify_file_baseline: directory under /proc is not allowed"
+        },
+        {
+          "tool": "run_shell",
+          "arguments": {
+            "command": "rm -rf /"
+          },
+          "rejected": true,
+          "error": "blocked: unknown tool"
+        },
+        {
+          "tool": "sample_process_memory",
+          "arguments": {
+            "samples": 1000
+          },
+          "rejected": true,
+          "error": "rejected by validator: argument 'samples' must be <= 30"
+        },
+        {
+          "tool": "get_top_memory_processes",
+          "arguments": {
+            "limit": true
+          },
+          "rejected": true,
+          "error": "rejected by validator: argument 'limit' must be int, got boolean"
+        }
+      ]
+    }
+  }
+}

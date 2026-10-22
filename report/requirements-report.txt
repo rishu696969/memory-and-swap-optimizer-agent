@@ -1,0 +1,4 @@
+# Extra packages for rebuilding the report and diagrams (LibreOffice and Graphviz are also needed).
+python-docx==1.2.0
+pymupdf==2.0
+matplotlib>=3.8

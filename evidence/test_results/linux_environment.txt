@@ -1,0 +1,11 @@
+# environment
+Linux 08dcc25b8afa 7.0.12-linuxkit #1 SMP PREEMPT Fri Aug 14 16:27:59 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+Python 3.12.3
+uid=1001(student) gid=1001(student) groups=1001(student)
+Name: mcp
+Version: 2.3.0
+Name: psutil
+Version: 7.2.2
+Name: pydantic
+Version: 2.14.1

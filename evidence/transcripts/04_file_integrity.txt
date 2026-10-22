@@ -1,0 +1,48 @@
+# transcript: 04_file_integrity
+# captured: 2026-10-22T17:40:35Z on Linux 7.0.12-linuxkit aarch64, user student
+
+Memory and Swap Optimizer Agent v1.0.0
+DEMO ROUTING (deterministic keyword rules - no LLM inference) | MCP tools: 17 | dry-run: False
+audit log: /home/student/.local/share/mso-agent/audit.jsonl
+Type /help for examples, /quit to exit.
+
+mso> verify /home/student/demo_dir
+  -> tool verify_file_baseline({"directory": "/home/student/demo_dir"}) : ERROR
+     Error executing tool verify_file_baseline: no baseline exists for /home/student/demo_dir; request one with request_baseline_creation
+
+[demo routing: deterministic keyword rules, no LLM inference]
+verify_file_baseline failed: Error executing tool verify_file_baseline: no baseline exists for /home/student/demo_dir; request one with request_baseline_creation
+
+mso> create a baseline for /home/student/demo_dir
+
+========================================================================
+  APPROVAL REQUIRED - a state-changing action was requested
+========================================================================
+  operation id : op-672dfde77c06
+  action       : create_baseline
+  arguments    : {"directory": "/home/student/demo_dir"}
+  summary      : Create a new SHA-256 baseline for
+                 /home/student/demo_dir.
+  directory    : /home/student/demo_dir
+  store_file   : /home/student/.local/share/mso-
+                 agent/baselines/96d8350a746680d1.json
+  expires in   : 299 s
+========================================================================
+Type 'yes' to approve this exact operation (anything else denies): yes
+  -> tool request_baseline_creation({"directory": "/home/student/demo_dir"}) : ok [approved]
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Change create_baseline {'directory': '/home/student/demo_dir'}: EXECUTED.
+  file_count: 3
+  store_file: /home/student/.local/share/mso-agent/baselines/96d8350a746680d1.json
+
+mso> verify /home/student/demo_dir
+  -> tool verify_file_baseline({"directory": "/home/student/demo_dir"}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Integrity check of /home/student/demo_dir (baseline 2026-10-22T17:40:36+00:00): unchanged.
+  modified: none
+  missing: none
+  new: none
+
+mso> /quit

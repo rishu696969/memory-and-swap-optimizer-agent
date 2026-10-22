@@ -1,0 +1,111 @@
+# transcript: 07_live_privileged_swappiness (privileged container, narrow sudoers rule)
+# captured: 2026-10-22T17:40:42Z on Linux 7.0.12-linuxkit aarch64, user student
+
+Memory and Swap Optimizer Agent v1.0.0
+DEMO ROUTING (deterministic keyword rules - no LLM inference) | MCP tools: 17 | dry-run: False
+audit log: /home/student/.local/share/mso-agent/audit.jsonl
+Type /help for examples, /quit to exit.
+
+mso> set swappiness to 35
+
+========================================================================
+  APPROVAL REQUIRED - a state-changing action was requested
+========================================================================
+  operation id : op-995caf2d4fdc
+  action       : set_swappiness
+  arguments    : {"value": 35}
+  summary      : Temporarily set vm.swappiness from 60 to 35 (runs: sudo
+                 -n sysctl -w vm.swappiness=35).
+  current_value: 60
+  requested_value: 35
+  allowed_range: [10, 100]
+  persistence  : temporary - lost at reboot; no file under /etc is
+                 modified
+  restore_instructions: sudo sysctl -w vm.swappiness=60
+  expires in   : 299 s
+========================================================================
+Type 'yes' to approve this exact operation (anything else denies): yes
+  -> tool request_swappiness_change({"value": 35}) : ok [approved]
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Change set_swappiness {'value': 35}: EXECUTED.
+  command: /usr/bin/sudo -n /usr/sbin/sysctl -w vm.swappiness=35 -> exit 0
+  swappiness_before: 60
+  swappiness_after: 35
+  verified: True
+  restore_instructions: sudo sysctl -w vm.swappiness=60
+  note: Temporary runtime change only. Measure memory/swap again before claiming any effect.
+
+mso> what is my swappiness
+  -> tool get_swap_info({}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Swap devices: /var/lib/swap (0.0/1024.0 MB). vm.swappiness = 35.
+vm.swappiness (0-200 on Linux >= 5.8, default 60) is the relative cost the kernel assigns to swapping anonymous pages versus dropping file-backed page cache when it must reclaim memory. Lower values prefer dropping cache; higher values swap anonymous pages more readily. It does not make the kernel swap when there is no memory pressure. Swap *used* alone is not a problem; sustained swap-in/out traffic is.
+
+mso> set swappiness to 60
+
+========================================================================
+  APPROVAL REQUIRED - a state-changing action was requested
+========================================================================
+  operation id : op-31c238cabd1f
+  action       : set_swappiness
+  arguments    : {"value": 60}
+  summary      : Temporarily set vm.swappiness from 35 to 60 (runs: sudo
+                 -n sysctl -w vm.swappiness=60).
+  current_value: 35
+  requested_value: 60
+  allowed_range: [10, 100]
+  persistence  : temporary - lost at reboot; no file under /etc is
+                 modified
+  restore_instructions: sudo sysctl -w vm.swappiness=35
+  expires in   : 299 s
+========================================================================
+Type 'yes' to approve this exact operation (anything else denies): yes
+  -> tool request_swappiness_change({"value": 60}) : ok [approved]
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Change set_swappiness {'value': 60}: EXECUTED.
+  command: /usr/bin/sudo -n /usr/sbin/sysctl -w vm.swappiness=60 -> exit 0
+  swappiness_before: 35
+  swappiness_after: 60
+  verified: True
+  restore_instructions: sudo sysctl -w vm.swappiness=35
+  note: Temporary runtime change only. Measure memory/swap again before claiming any effect.
+
+mso> what is my swappiness
+  -> tool get_swap_info({}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Swap devices: /var/lib/swap (0.0/1024.0 MB). vm.swappiness = 60.
+vm.swappiness (0-200 on Linux >= 5.8, default 60) is the relative cost the kernel assigns to swapping anonymous pages versus dropping file-backed page cache when it must reclaim memory. Lower values prefer dropping cache; higher values swap anonymous pages more readily. It does not make the kernel swap when there is no memory pressure. Swap *used* alone is not a problem; sustained swap-in/out traffic is.
+
+mso> drop caches level 1
+
+========================================================================
+  APPROVAL REQUIRED - a state-changing action was requested
+========================================================================
+  operation id : op-1ba6aa8bac1e
+  action       : drop_caches
+  arguments    : {"level": 1}
+  summary      : Run sync, then write 1 to vm.drop_caches to drop clean
+                 page cache.
+  level        : 1
+  warning      : The kernel documentation describes drop_caches as a
+                 testing/debugging aid. Dropped cache must be re-read
+                 from disk, so file access may be slower afterwards. It
+                 does not fix a memory leak and only clean (already
+                 written) pages are dropped.
+  expires in   : 299 s
+========================================================================
+Type 'yes' to approve this exact operation (anything else denies): yes
+  -> tool request_drop_caches({"level": 1}) : ok [approved]
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Change drop_caches {'level': 1}: EXECUTED.
+  command: /usr/bin/sudo -n /usr/sbin/sysctl -w vm.drop_caches=1 -> exit 0
+  measured_before: {'free_mb': 441.2, 'available_mb': 3018.4, 'page_cache_mb': 2526.9}
+  measured_after: {'free_mb': 2898.7, 'available_mb': 3042.8, 'page_cache_mb': 201.4}
+  note: These are the measured counters only. A higher 'free' figure is expected after dropping cache and is NOT evidence of better performance; the cache will refill as files are used.
+
+mso> /quit

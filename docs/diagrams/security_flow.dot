@@ -1,0 +1,48 @@
+// Security and approval flow applied to every tool call (as built).
+// Render: dot -Tpng -Gdpi=200 security_flow.dot -o security_flow.png
+// Decision steps are yellow boxes ending in '?' (diamonds waste page width).
+digraph security_flow {
+  graph [rankdir=TB, fontname="DejaVu Sans", nodesep=0.25, ranksep=0.22, pad=0.1];
+  node  [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=13, fillcolor="#DAE3F3", margin="0.12,0.05"];
+  edge  [fontname="DejaVu Sans", fontsize=12, color="#444444"];
+
+  call      [label="Tool call from the model\n(or /call) {name, arguments}"];
+  visible   [label="1. Host (agent.py): is this tool\noffered to the model?", fillcolor="#FFF2CC"];
+  strictchk [label="2. Server (validation.py):\nknown tool, no extra keys, exact\ntypes, ranges, choices, lengths?", fillcolor="#FFF2CC"];
+  domain    [label="3. Allowlisted module/service?\nvalid unit name? path inside\nallowed roots (realpath)?", fillcolor="#FFF2CC"];
+  kind      [label="4. Read-only tool\nor request_* tool?", fillcolor="#FFF2CC"];
+  ro        [label="Run read-only tool\n/proc, psutil, hashlib,\nmodinfo, systemctl show", fillcolor="#E2EFDA"];
+  pend      [label="5. ApprovalGate.create()\nstore {op_id, action, args,\nnonce, expiry}; run nothing", fillcolor="#FCE4D6"];
+  human     [label="6. REPL shows exact action\nand arguments: human\ntypes 'yes'?", fillcolor="#FFF2CC"];
+  cancel    [label="cancel_pending_change\n-> denied_by_user", fillcolor="#F8CBAD"];
+  token     [label="7. Host: HMAC-SHA256(key, op);\nkey never seen by the model;\ncall apply_approved_change", fillcolor="#FCE4D6"];
+  verify    [label="8. Server gate: HMAC matches\nstored op? unused? not\nexpired? (compare_digest)", fillcolor="#FFF2CC"];
+  run       [label="9. Runner: fixed executable,\nargv list, shell=False, sudo -n,\nregex screen, timeout, output cap", fillcolor="#E2EFDA"];
+  reject    [label="Reject:\nerror returned as\ntool result", fillcolor="#F8CBAD"];
+  out       [label="10. Structured result -> audit log\n-> model as UNTRUSTED output", fillcolor="#EDEDED"];
+
+  call -> visible;
+  visible -> strictchk [label=" yes"];
+  strictchk -> domain [label=" yes"];
+  domain -> kind [label=" yes"];
+  kind -> pend [label=" request_*"];
+  kind -> ro [label=" read-only"];
+  pend -> human;
+  human -> token [label=" yes"];
+  token -> verify;
+  verify -> run [label=" valid"];
+  run -> out;
+  ro -> out;
+
+  visible -> reject [label=" no"];
+  strictchk -> reject [label=" no"];
+  domain -> reject [label=" no"];
+  verify -> reject [label=" forged /\n replayed /\n expired"];
+  human -> cancel [label=" no"];
+  cancel -> out;
+  reject -> out;
+
+  { rank=same; strictchk; reject; }
+  { rank=same; kind; ro; }
+  { rank=same; human; cancel; }
+}

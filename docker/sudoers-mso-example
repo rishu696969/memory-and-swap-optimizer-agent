@@ -1,0 +1,11 @@
+# OPTIONAL narrow sudo rule for the Memory and Swap Optimizer Agent.
+# Install with:  sudo visudo -f /etc/sudoers.d/mso-agent   (replace "student" with your user)
+#
+# It permits exactly the privileged commands the agent's runner can build for
+# the memory module -- nothing else.  It is NOT broad passwordless sudo:
+#   * vm.swappiness only in 10..100 (matches security/policy.py)
+#   * vm.drop_caches only 1, 2 or 3
+# Without this file the agent still works; approved privileged actions simply
+# fail with "sudo: a password is required" (sudo -n never prompts).
+# Kernel-module and systemd actions are deliberately not included here.
+student ALL=(root) NOPASSWD: /usr/sbin/sysctl -w vm.swappiness=[1-9][0-9], /usr/sbin/sysctl -w vm.swappiness=100, /usr/sbin/sysctl -w vm.drop_caches=1, /usr/sbin/sysctl -w vm.drop_caches=2, /usr/sbin/sysctl -w vm.drop_caches=3

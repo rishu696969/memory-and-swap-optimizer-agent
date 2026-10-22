@@ -1,0 +1,78 @@
+# transcript: 03_swappiness_approval
+# captured: 2026-10-22T17:40:33Z on Linux 7.0.12-linuxkit aarch64, user student
+
+Memory and Swap Optimizer Agent v1.0.0
+DEMO ROUTING (deterministic keyword rules - no LLM inference) | MCP tools: 17 | dry-run: False
+audit log: /home/student/.local/share/mso-agent/audit.jsonl
+Type /help for examples, /quit to exit.
+
+mso> set swappiness to 30
+
+========================================================================
+  APPROVAL REQUIRED - a state-changing action was requested
+========================================================================
+  operation id : op-5df4240d906f
+  action       : set_swappiness
+  arguments    : {"value": 30}
+  summary      : Temporarily set vm.swappiness from 60 to 30 (runs: sudo
+                 -n sysctl -w vm.swappiness=30).
+  current_value: 60
+  requested_value: 30
+  allowed_range: [10, 100]
+  persistence  : temporary - lost at reboot; no file under /etc is
+                 modified
+  restore_instructions: sudo sysctl -w vm.swappiness=60
+  expires in   : 299 s
+========================================================================
+Type 'yes' to approve this exact operation (anything else denies): no
+  -> tool request_swappiness_change({"value": 30}) : ok [denied]
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Not executed - the human declined: Temporarily set vm.swappiness from 60 to 30 (runs: sudo -n sysctl -w vm.swappiness=30).
+
+mso> set swappiness to 30
+
+========================================================================
+  APPROVAL REQUIRED - a state-changing action was requested
+========================================================================
+  operation id : op-6b5d6542e513
+  action       : set_swappiness
+  arguments    : {"value": 30}
+  summary      : Temporarily set vm.swappiness from 60 to 30 (runs: sudo
+                 -n sysctl -w vm.swappiness=30).
+  current_value: 60
+  requested_value: 30
+  allowed_range: [10, 100]
+  persistence  : temporary - lost at reboot; no file under /etc is
+                 modified
+  restore_instructions: sudo sysctl -w vm.swappiness=60
+  expires in   : 299 s
+========================================================================
+Type 'yes' to approve this exact operation (anything else denies): yes
+  -> tool request_swappiness_change({"value": 30}) : ok [approved]
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Change set_swappiness {'value': 30}: FAILED.
+  command: /usr/bin/sudo -n /usr/sbin/sysctl -w vm.swappiness=30 -> exit 1
+  stderr: sudo: a password is required
+  swappiness_before: 60
+  swappiness_after: 60
+  verified: False
+  restore_instructions: sudo sysctl -w vm.swappiness=60
+  note: Temporary runtime change only. Measure memory/swap again before claiming any effect.
+
+mso> set swappiness to 5
+  -> tool request_swappiness_change({"value": 5}) : ERROR
+     rejected by validator: argument 'value' must be >= 10
+
+[demo routing: deterministic keyword rules, no LLM inference]
+request_swappiness_change failed: rejected by validator: argument 'value' must be >= 10
+
+mso> what is my swappiness
+  -> tool get_swap_info({}) : ok
+
+[demo routing: deterministic keyword rules, no LLM inference]
+Swap devices: /var/lib/swap (0.0/1024.0 MB). vm.swappiness = 60.
+vm.swappiness (0-200 on Linux >= 5.8, default 60) is the relative cost the kernel assigns to swapping anonymous pages versus dropping file-backed page cache when it must reclaim memory. Lower values prefer dropping cache; higher values swap anonymous pages more readily. It does not make the kernel swap when there is no memory pressure. Swap *used* alone is not a problem; sustained swap-in/out traffic is.
+
+mso> /quit
