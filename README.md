@@ -5,7 +5,7 @@ Operating System Lab project (BCSE303P), Slot L53+L54, Faculty: NAVEENKUMAR J
 | S.No. | Name | Registration Number |
 |---|---|---|
 | 1 | Kumar Hrishikesh Ranjan | 24BDS0221 |
-| 2 | Ashish Kumar | 24BKT059 |
+| 2 | Ashish Kumar | 24BKT0059 |
 
 A command-line agent for Linux. You type a request in plain English, and a language model chooses
 from a fixed set of typed **MCP tools**. The tools run in a separate MCP server process.
@@ -224,4 +224,4 @@ See the report's verification matrix and `evidence/` for details.
 * **LLM providers:** the Ollama and OpenAI adapters are tested with mocked HTTP only. Live LLM inference
   was **not** verified for this submission, because the Ollama image could not be downloaded in the
   build environment in time and no OpenAI key was used. All demos use the clearly labelled demo router.
-# memory-and-swap-optimizer-agent
+
